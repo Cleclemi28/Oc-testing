@@ -60,6 +60,12 @@ build le site et le publie sur GitHub Pages à chaque push sur `main`.
   (`demo.lafetedelavie.fr`) — le workflow ajoute alors le `CNAME` et bascule
   les URL canoniques sur `https://demo.lafetedelavie.fr`.
 
+GitHub Pages est déjà activé sur le dépôt (source : *GitHub Actions*) :
+un simple `git push` suffit pour redéployer.
+
+> Pousser le fichier de workflow lui-même requiert un token `gh` disposant
+> du scope `workflow` (`gh auth refresh -h github.com -s workflow`).
+
 Variables d'environnement utilisées au build :
 
 | Variable | Défaut | Rôle |
