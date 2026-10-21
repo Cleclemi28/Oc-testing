@@ -1,0 +1,162 @@
+---
+import { ctas } from '../data/site';
+import { waveDivider } from '../data/images';
+
+const values = [
+  {
+    title: 'Solidaires, bienveillants, jamais culpabilisants',
+    body: "Nous sommes solidaires et bienveillants, et surtout pas moralisateurs ou culpabilisateurs. Évidemment, nous sommes laïcs et apolitiques parce que tous les terrains et toutes les personnes ont de l'importance pour nous.",
+    accent: 'cyan',
+  },
+  {
+    title: 'Fédérer, créer, jouer',
+    body: "Nous cherchons à fédérer nos partenaires et à apporter des informations santé de façon pertinente avec un appui pédagogique et participatif au moyen du créatif et de l'artistique, dans un univers ludique et festif.",
+    accent: 'rose',
+  },
+];
+---
+
+<section class="manifesto section" id="manifeste">
+  <div class="container">
+    <div class="manifesto__statement">
+      <p class="eyebrow" data-reveal="fade-up">Notre manifeste</p>
+      <h2 class="manifesto__title" data-split="lines">
+        Faire de la prévention santé bien-être autrement
+      </h2>
+      <img
+        class="divider-wave"
+        src={waveDivider.src}
+        alt=""
+        width={waveDivider.width}
+        height={waveDivider.height}
+        loading="lazy"
+        decoding="async"
+      />
+    </div>
+
+    <div class="manifesto__grid">
+      <div class="manifesto__lead" data-reveal="fade-up">
+        <p class="lead" data-words>
+          Association à but non-lucratif (loi 1901), nous sommes spécialisés dans l'organisation de
+          <strong>forums santé de tous types</strong> sur l'ensemble du territoire national, avec une
+          présence prédominante sur les Hauts-de-France.
+        </p>
+        <a class="btn" href={ctas.association.href}>{ctas.association.label}</a>
+      </div>
+
+      <div class="manifesto__values">
+        <p class="manifesto__values-title" data-reveal="fade-up">Nos valeurs</p>
+        {
+          values.map((value) => (
+            <article class={`value value--${value.accent}`} data-reveal="fade-up">
+              <h3 class="value__title">{value.title}</h3>
+              <p class="value__body">{value.body}</p>
+            </article>
+          ))
+        }
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .manifesto {
+    background: linear-gradient(180deg, var(--c-bg) 0%, var(--c-bg-alt) 100%);
+    overflow: hidden;
+  }
+
+  .manifesto__statement {
+    max-width: 980px;
+    margin-inline: auto;
+    text-align: center;
+  }
+
+  .manifesto__title {
+    font-size: clamp(2rem, 1.2rem + 3.6vw, 3.4rem);
+    line-height: 1.12;
+    letter-spacing: var(--ls-display);
+    text-transform: uppercase;
+  }
+
+  .manifesto__grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr);
+    gap: clamp(2rem, 5vw, 4.5rem);
+    align-items: start;
+    margin-block-start: clamp(2.5rem, 6vw, 4.5rem);
+  }
+
+  .manifesto__lead {
+    position: sticky;
+    inset-block-start: calc(var(--header-h) + 2rem);
+    display: grid;
+    gap: 1.75rem;
+    justify-items: start;
+  }
+
+  .manifesto__lead strong {
+    color: var(--c-accent);
+    font-weight: 600;
+  }
+
+  .manifesto__values-title {
+    margin: 0 0 1.25rem;
+    font-family: var(--font-display);
+    font-size: 1.35rem;
+    color: var(--c-ink);
+  }
+
+  .manifesto__values {
+    display: grid;
+    gap: 1.25rem;
+  }
+
+  .value {
+    position: relative;
+    padding: clamp(1.5rem, 3vw, 2.25rem);
+    background: var(--c-white);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    border-inline-start: 5px solid var(--c-accent);
+    transition:
+      translate 0.35s var(--ease-out),
+      box-shadow 0.35s var(--ease-out);
+  }
+
+  .value:hover {
+    translate: 0 -6px;
+    box-shadow: var(--shadow-lg);
+  }
+
+  .value--cyan {
+    border-inline-start-color: var(--c-cyan);
+  }
+
+  .value--rose {
+    border-inline-start-color: var(--c-rose);
+  }
+
+  .value__title {
+    font-family: var(--font-display);
+    font-size: 1.3rem;
+    font-weight: 400;
+    margin-bottom: 0.6rem;
+  }
+
+  .value__body {
+    color: var(--c-text-2);
+    font-size: var(--fs-sm);
+    line-height: 1.7;
+    margin: 0;
+  }
+
+  @media (max-width: 899px) {
+    .manifesto__grid {
+      grid-template-columns: 1fr;
+    }
+
+    .manifesto__lead {
+      position: static;
+    }
+  }
+</style>

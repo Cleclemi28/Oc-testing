@@ -1,0 +1,186 @@
+---
+import { pillars } from '../data/content';
+import { img } from '../data/images';
+
+const badges = {
+  cyan: img('Background-1-1.svg'),
+  orange: img('Background-2.svg'),
+  green: img('Background-3.svg'),
+  rose: img('Background-4-rose.svg'),
+} as const;
+---
+
+<section class="pillars section" id="piliers">
+  <div class="container">
+    <div class="section__head section__head--center">
+      <p class="eyebrow" data-reveal="fade-up">Notre savoir-faire</p>
+      <h2 data-reveal="fade-up" data-split="lines">Des événements clé en main</h2>
+      <p class="lead" data-reveal="fade-up">
+        Nous imaginons des solutions adaptables à votre structure, à votre public et facilement
+        déployables quel que soit le terrain.
+      </p>
+    </div>
+
+    <ul class="pillars__grid" data-pillars>
+      {
+        pillars.map((pillar, index) => {
+          const badge = pillar.badge ? badges[pillar.accent] : null;
+          return (
+            <li
+              class={`pillar pillar--${pillar.accent}`}
+              data-reveal="fade-up"
+              style={`--i:${index}`}
+            >
+              <article class="pillar__card" data-tilt>
+                <span class="pillar__index" aria-hidden="true">
+                  {String(index + 1).padStart(2, '0')}
+                </span>
+                {badge && (
+                  <img
+                    class="pillar__badge"
+                    src={badge.src}
+                    alt=""
+                    width={badge.width}
+                    height={badge.height}
+                    loading="lazy"
+                    decoding="async"
+                  />
+                )}
+                <h3 class="pillar__title">{pillar.title}</h3>
+                <p class="pillar__body">{pillar.body}</p>
+              </article>
+            </li>
+          );
+        })
+      }
+    </ul>
+  </div>
+</section>
+
+<style>
+  .pillars {
+    background: var(--c-white);
+  }
+
+  .pillars__grid {
+    display: grid;
+    gap: clamp(0.75rem, 1.6vw, 1.1rem);
+    max-width: 900px;
+    margin-inline: auto;
+  }
+
+  /* Cartes empilées : chacune se cale en haut de l'écran et la suivante
+     vient se poser par-dessus, en cascade. */
+  .pillar {
+    position: sticky;
+    top: calc(var(--header-h) + 1.25rem + (var(--i) * 14px));
+    z-index: calc(var(--i) + 1);
+  }
+
+  .pillar__card {
+    position: relative;
+    display: grid;
+    align-content: start;
+    gap: 0.7rem;
+    padding: clamp(1.4rem, 2.6vw, 2rem) clamp(1.5rem, 3vw, 2.25rem);
+    background: var(--c-bg);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow);
+    overflow: hidden;
+    transition:
+      box-shadow 0.4s var(--ease-out),
+      background-color 0.4s var(--ease-out);
+  }
+
+  .pillar__card::before {
+    content: '';
+    position: absolute;
+    inset-block-start: 0;
+    inset-inline: 0;
+    block-size: 5px;
+    background: var(--pillar-accent, var(--c-accent));
+    transform-origin: left;
+    scale: 0 1;
+    transition: scale 0.5s var(--ease-out);
+  }
+
+  .pillar__card:hover::before {
+    scale: 1 1;
+  }
+
+  .pillar__card::after {
+    content: '';
+    position: absolute;
+    inset-block-start: -30%;
+    inset-inline-end: -30%;
+    inline-size: 260px;
+    block-size: 260px;
+    border-radius: 50%;
+    background: var(--pillar-accent, var(--c-accent));
+    opacity: 0;
+    filter: blur(60px);
+    transition: opacity 0.45s var(--ease-out);
+    pointer-events: none;
+  }
+
+  .pillar__card:hover {
+    box-shadow: var(--shadow-lg);
+  }
+
+  .pillar__card:hover::after {
+    opacity: 0.16;
+  }
+
+  .pillar--cyan {
+    --pillar-accent: var(--c-cyan);
+  }
+
+  .pillar--orange {
+    --pillar-accent: var(--c-orange);
+  }
+
+  .pillar--green {
+    --pillar-accent: var(--c-green);
+  }
+
+  .pillar--rose {
+    --pillar-accent: var(--c-rose);
+  }
+
+  .pillar__index {
+    position: absolute;
+    inset-block-start: 1.1rem;
+    inset-inline-end: 1.4rem;
+    font-family: var(--font-display);
+    font-size: 2.2rem;
+    color: var(--c-ink);
+    opacity: 0.1;
+    line-height: 1;
+  }
+
+  .pillar__badge {
+    inline-size: 58px;
+    block-size: 58px;
+    margin-block-end: 0.25rem;
+    transition: rotate 0.5s var(--ease-out);
+  }
+
+  .pillar__card:hover .pillar__badge {
+    rotate: -8deg;
+  }
+
+  .pillar__title {
+    font-family: var(--font-display);
+    font-weight: 400;
+    font-size: clamp(1.3rem, 1.05rem + 0.9vw, 1.7rem);
+    line-height: 1.2;
+  }
+
+  .pillar__body {
+    margin: 0;
+    font-size: var(--fs-sm);
+    line-height: 1.7;
+    color: var(--c-text-2);
+    max-width: 62ch;
+  }
+</style>

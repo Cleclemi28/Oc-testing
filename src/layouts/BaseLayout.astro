@@ -1,0 +1,158 @@
+---
+import '../styles/global.css';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import { site, socials, legalLinks } from '../data/site';
+import { logoImage } from '../data/images';
+import fredokaUrl from '../assets/fonts/fredoka-one-latin-400.woff2?url';
+import poppinsUrl from '../assets/fonts/poppins-latin-400.woff2?url';
+
+interface Props {
+  title: string;
+  description: string;
+  ogImage?: string;
+}
+
+const { title, description, ogImage = 'og-image.jpg' } = Astro.props;
+
+/* BASE_URL ne garantit pas de slash final : on le normalise une fois pour tous. */
+const base = import.meta.env.BASE_URL.replace(/\/*$/, '/');
+const canonical = new URL(Astro.url.pathname, Astro.site).href;
+const ogImageUrl = new URL(`${base}${ogImage}`, Astro.site).href;
+const logoUrl = new URL(`${base}logo.png`, Astro.site).href;
+
+/* JSON-LD — l'entité réelle est l'association, la démo en est un miroir. */
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'NGO',
+  '@id': `${site.url}/#organization`,
+  name: site.legalName,
+  alternateName: 'Fête de la Vie',
+  url: site.url,
+  logo: logoUrl,
+  image: new URL(`${base}og-image.jpg`, Astro.site).href,
+  description: site.description,
+  foundingDate: site.founded,
+  slogan: site.tagline,
+  email: site.email,
+  telephone: site.phone,
+  address: {
+    '@type': 'PostalAddress',
+    streetAddress: site.address.street,
+    postalCode: site.address.postalCode,
+    addressLocality: site.address.city,
+    addressRegion: site.address.region,
+    addressCountry: site.address.country,
+  },
+  areaServed: { '@type': 'Country', name: 'France' },
+  sameAs: socials.map((social) => social.href),
+  contactPoint: {
+    '@type': 'ContactPoint',
+    contactType: 'contact',
+    email: site.email,
+    telephone: site.phone,
+    availableLanguage: ['fr'],
+  },
+};
+---
+
+<!doctype html>
+<html lang={site.lang}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <meta
+      name="robots"
+      content="follow, index, max-snippet:-1, max-video-preview:-1, max-image-preview:large"
+    />
+    <link rel="canonical" href={canonical} />
+
+    <!-- Open Graph -->
+    <meta property="og:locale" content={site.locale} />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content={site.name} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={ogImageUrl} />
+    <meta property="og:image:secure_url" content={ogImageUrl} />
+    <meta property="og:image:type" content="image/jpeg" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content={`${site.name} — ${site.tagline}`} />
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImageUrl} />
+    <meta name="twitter:image:alt" content={`${site.name} — ${site.tagline}`} />
+
+    <meta name="theme-color" content="#376079" />
+    <link rel="icon" href={`${base}favicon.svg`} type="image/svg+xml" />
+    <link rel="apple-touch-icon" href={`${base}logo.png`} />
+
+    <!-- Polices auto-hébergées (RGPD : aucun appel à Google Fonts) -->
+    <link rel="preload" href={fredokaUrl} as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href={poppinsUrl} as="font" type="font/woff2" crossorigin />
+
+    <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
+
+    <!--
+      Marque la page comme pilotée par JS et pose un filet de sécurité :
+      si le module d'animation ne se charge pas, on retire la classe `js`
+      afin de ne jamais laisser de contenu masqué (FOUC inversé).
+    -->
+    <script is:inline>
+      document.documentElement.classList.add('js', 'is-loading');
+      window.__animReady = false;
+      window.setTimeout(function () {
+        document.documentElement.classList.remove('is-loading');
+        if (!window.__animReady) {
+          window.__animFailed = true;
+          document.documentElement.classList.remove('js');
+        }
+      }, 2500);
+    </script>
+  </head>
+
+  <body>
+    <a class="skip-link" href="#main">Aller au contenu</a>
+
+    <!-- Intro : superposition d'ouverture, animée en CSS pur. -->
+    <div class="intro" data-intro>
+      <div class="intro__inner">
+        <img
+          class="intro__logo"
+          src={logoImage.src}
+          alt=""
+          width={logoImage.width}
+          height={logoImage.height}
+          decoding="async"
+        />
+        <p class="intro__tagline">La Fête de la Vie</p>
+        <span class="intro__bar" aria-hidden="true"></span>
+      </div>
+    </div>
+
+    <div class="cursor-dot" data-cursor-dot aria-hidden="true"></div>
+    <div class="cursor-ring" data-cursor-ring aria-hidden="true"></div>
+
+    <Header />
+    <main id="main">
+      <slot />
+    </main>
+    <Footer />
+  </body>
+</html>
+
+<style is:global>
+  /* Icônes sociales & petits éléments utilitaires partagés */
+  .icon {
+    inline-size: 1.25em;
+    block-size: 1.25em;
+    fill: currentColor;
+  }
+</style>

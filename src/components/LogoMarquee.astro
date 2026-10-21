@@ -1,0 +1,111 @@
+---
+import { partners, partnerImages } from '../data/content';
+---
+
+<section class="partners" aria-label="Ils nous soutiennent">
+  <p class="partners__label">Ils nous soutiennent</p>
+
+  {
+    [1, -1].map((direction) => (
+      <div
+        class="partners__viewport"
+        data-marquee
+        data-direction={String(direction)}
+        aria-hidden={direction === -1 ? 'true' : undefined}
+      >
+        <div class="partners__track">
+          <ul class="partners__set">
+            {partners.map((partner) => {
+              const image = partnerImages[partner.file];
+              return (
+                <li class="partners__item">
+                  <img
+                    src={image.src}
+                    alt={partner.name}
+                    width={image.width}
+                    height={image.height}
+                    loading="lazy"
+                    decoding="async"
+                  />
+                </li>
+              );
+            })}
+          </ul>
+        </div>
+      </div>
+    ))
+  }
+</section>
+
+<style>
+  .partners {
+    position: relative;
+    padding-block: clamp(1.75rem, 3.5vw, 2.75rem);
+    background: var(--c-white);
+    border-block: 1px solid var(--c-line);
+    overflow: hidden;
+  }
+
+  .partners__label {
+    margin: 0 0 1.1rem;
+    text-align: center;
+    font-size: var(--fs-xs);
+    font-weight: 600;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--c-text-3);
+  }
+
+  .partners__viewport {
+    position: relative;
+    overflow: hidden;
+    mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+    -webkit-mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+  }
+
+  .partners__viewport + .partners__viewport {
+    margin-block-start: 1.5rem;
+  }
+
+  .partners__track {
+    display: flex;
+    align-items: center;
+    inline-size: max-content;
+    will-change: transform;
+  }
+
+  .partners__set {
+    display: flex;
+    align-items: center;
+    gap: clamp(2rem, 5vw, 4.5rem);
+    padding-inline-end: clamp(2rem, 5vw, 4.5rem);
+  }
+
+  .partners__item {
+    flex: none;
+    display: grid;
+    place-items: center;
+    block-size: 64px;
+    opacity: 0.68;
+    transition:
+      opacity 0.3s var(--ease-out),
+      scale 0.3s var(--ease-out);
+  }
+
+  .partners__item:hover {
+    opacity: 1;
+    scale: 1.06;
+  }
+
+  .partners__item img {
+    max-block-size: 100%;
+    inline-size: auto;
+    object-fit: contain;
+  }
+
+  @media (max-width: 767px) {
+    .partners__item {
+      block-size: 48px;
+    }
+  }
+</style>

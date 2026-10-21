@@ -1,0 +1,238 @@
+---
+import { team, teamImages, portraits, portraitImages } from '../data/content';
+import { ctas } from '../data/site';
+---
+
+<section class="team section" id="intervenants">
+  <div class="container container--wide">
+    <div class="section__head section__head--center">
+      <p class="eyebrow" data-reveal="fade-up">Nos intervenants</p>
+      <h2 data-reveal="fade-up" data-split="lines">Une équipe engagée</h2>
+      <p class="lead" data-reveal="fade-up">
+        Véritables piliers de nos actions, nos bénévoles s'impliquent avec conviction et générosité. Leur
+        engagement fait la différence et donne toute sa force à nos projets de prévention.
+      </p>
+    </div>
+
+    <ul class="team__grid">
+      {
+        team.map((member, index) => {
+          const image = teamImages[member.file];
+          return (
+            <li class="team__card" data-team-card style={`--i:${index}`}>
+              <div class="team__frame">
+                <img
+                  src={image.src}
+                  alt={`Illustration : ${member.name}`}
+                  width={image.width}
+                  height={image.height}
+                  loading="lazy"
+                  decoding="async"
+                />
+              </div>
+              <h3 class="team__name">{member.name}</h3>
+              <p class="team__body">{member.body}</p>
+            </li>
+          );
+        })
+      }
+    </ul>
+
+    <div class="team__cta" data-reveal="fade-up">
+      <p class="team__cta-text">
+        Ils constituent une véritable richesse et témoignent d'un engagement collectif au service de
+        l'intérêt général.
+      </p>
+      <a class="btn" href={ctas.join.href}>{ctas.join.label}</a>
+    </div>
+
+    <div class="collective" data-reveal="fade-up">
+      <h3 class="collective__title">Le collectif</h3>
+      <ul class="collective__list">
+        {
+          portraits.map((portrait) => {
+            const image = portraitImages[portrait.file];
+            return (
+              <li class="collective__item">
+                <span class="collective__frame">
+                  <img
+                    src={image.src}
+                    alt={`Portrait de ${portrait.name}`}
+                    width={image.width}
+                    height={image.height}
+                    loading="lazy"
+                    decoding="async"
+                  />
+                </span>
+                <span class="collective__name">{portrait.name}</span>
+                <span class="collective__role">{portrait.role}</span>
+              </li>
+            );
+          })
+        }
+      </ul>
+    </div>
+  </div>
+</section>
+
+<style>
+  .team {
+    background: var(--c-white);
+    overflow: hidden;
+  }
+
+  .team__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+    gap: clamp(0.75rem, 1.8vw, 1.5rem);
+  }
+
+  .team__card {
+    position: relative;
+    display: grid;
+    align-content: start;
+    gap: 0.35rem;
+    padding: clamp(1rem, 2vw, 1.5rem) clamp(1rem, 2vw, 1.4rem) clamp(1.4rem, 2.5vw, 1.9rem);
+    background: #f5e8c7;
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    transition:
+      translate 0.45s var(--ease-out),
+      box-shadow 0.45s var(--ease-out);
+    box-shadow: 0 10px 26px -20px rgb(120 90 30 / 0.7);
+  }
+
+  .team__card::after {
+    content: '';
+    position: absolute;
+    inset-block-end: -40%;
+    inset-inline-start: -20%;
+    inline-size: 140%;
+    block-size: 70%;
+    background: radial-gradient(ellipse at center, rgb(255 255 255 / 0.65), transparent 70%);
+    opacity: 0;
+    transition: opacity 0.45s var(--ease-out);
+    pointer-events: none;
+  }
+
+  .team__card:hover {
+    translate: 0 -10px;
+    box-shadow: 0 34px 60px -32px rgb(120 90 30 / 0.85);
+  }
+
+  .team__card:hover::after {
+    opacity: 1;
+  }
+
+  .team__frame {
+    position: relative;
+    z-index: 1;
+    aspect-ratio: 1;
+    margin-block-end: 0.6rem;
+    display: grid;
+    place-items: center;
+  }
+
+  .team__frame img {
+    inline-size: 100%;
+    block-size: 100%;
+    object-fit: contain;
+    transition: rotate 0.5s var(--ease-out);
+  }
+
+  .team__card:hover .team__frame img {
+    rotate: -5deg;
+  }
+
+  .team__name {
+    position: relative;
+    z-index: 1;
+    font-family: var(--font-display);
+    font-weight: 400;
+    font-size: 1.3rem;
+    color: #6b4f14;
+  }
+
+  .team__body {
+    position: relative;
+    z-index: 1;
+    margin: 0;
+    font-size: var(--fs-xs);
+    line-height: 1.6;
+    color: #7a6134;
+  }
+
+  .team__cta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 1.5rem 2rem;
+    margin-block-start: clamp(2.5rem, 5vw, 3.5rem);
+    text-align: center;
+  }
+
+  .team__cta-text {
+    max-width: 520px;
+    margin: 0;
+    color: var(--c-text-2);
+  }
+
+  .collective {
+    margin-block-start: clamp(3rem, 6vw, 4.5rem);
+    padding-block-start: clamp(2rem, 4vw, 3rem);
+    border-block-start: 1px solid var(--c-line);
+  }
+
+  .collective__title {
+    margin: 0 0 1.5rem;
+    font-family: var(--font-display);
+    font-weight: 400;
+    font-size: 1.4rem;
+    text-align: center;
+  }
+
+  .collective__list {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: clamp(1rem, 2vw, 1.75rem);
+    justify-items: center;
+  }
+
+  .collective__item {
+    display: grid;
+    justify-items: center;
+    gap: 0.3rem;
+    text-align: center;
+  }
+
+  .collective__frame {
+    inline-size: clamp(96px, 12vw, 132px);
+    block-size: clamp(96px, 12vw, 132px);
+    display: grid;
+    place-items: center;
+    margin-block-end: 0.6rem;
+    border-radius: 50%;
+    overflow: hidden;
+    background: var(--c-bg-alt);
+    box-shadow: var(--shadow-sm);
+  }
+
+  .collective__frame img {
+    inline-size: 100%;
+    block-size: 100%;
+    object-fit: cover;
+    object-position: center top;
+  }
+
+  .collective__name {
+    font-family: var(--font-display);
+    font-size: 1.15rem;
+    color: var(--c-ink);
+  }
+
+  .collective__role {
+    font-size: var(--fs-xs);
+    color: var(--c-text-3);
+  }
+</style>

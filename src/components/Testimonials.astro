@@ -1,0 +1,248 @@
+---
+import { testimonials } from '../data/content';
+---
+
+<section class="testimonials section" id="temoignages">
+  <div class="container">
+    <div class="section__head testimonials__head">
+      <div>
+        <p class="eyebrow" data-reveal="fade-up">Ils parlent de nous</p>
+        <h2 data-reveal="fade-up" data-split="lines">
+          Des professionals qui valident notre approche
+        </h2>
+      </div>
+      <div class="testimonials__nav" data-reveal="fade-up">
+        <button type="button" class="testimonials__btn" data-carousel-prev aria-label="Témoignage précédent">
+          <svg viewBox="0 0 24 24" aria-hidden="true" class="icon">
+            <path d="M15 5 8 12l7 7" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" />
+          </svg>
+        </button>
+        <button type="button" class="testimonials__btn" data-carousel-next aria-label="Témoignage suivant">
+          <svg viewBox="0 0 24 24" aria-hidden="true" class="icon">
+            <path d="m9 5 7 7-7 7" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" />
+          </svg>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="testimonials__viewport" data-carousel tabindex="0" role="region" aria-label="Témoignages">
+    <ul class="testimonials__track">
+      {
+        testimonials.map((testimonial, index) => (
+          <li class="testimonial" data-reveal="fade-up">
+            <figure>
+              <span class="testimonial__quote" aria-hidden="true">
+                &ldquo;
+              </span>
+              <blockquote class="testimonial__text">{testimonial.quote}</blockquote>
+              <figcaption class="testimonial__author">
+                <span class="testimonial__name">{testimonial.name}</span>
+                <span class="testimonial__role">{testimonial.role}</span>
+              </figcaption>
+              <span class="testimonial__index" aria-hidden="true">
+                {String(index + 1).padStart(2, '0')}
+              </span>
+            </figure>
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+</section>
+
+<style>
+  .testimonials {
+    background: var(--c-bg);
+    overflow: hidden;
+  }
+
+  .testimonials__head {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 2rem;
+    max-width: none;
+  }
+
+  .testimonials__nav {
+    display: flex;
+    gap: 0.6rem;
+    flex: none;
+  }
+
+  .testimonials__btn {
+    inline-size: 52px;
+    block-size: 52px;
+    display: grid;
+    place-items: center;
+    border: 2px solid var(--c-ink);
+    border-radius: 50%;
+    background: transparent;
+    color: var(--c-ink);
+    cursor: pointer;
+    transition:
+      background-color 0.28s var(--ease-out),
+      color 0.28s var(--ease-out),
+      border-color 0.28s var(--ease-out);
+  }
+
+  .testimonials__btn:hover {
+    background: var(--c-accent);
+    border-color: var(--c-accent);
+    color: var(--c-white);
+  }
+
+  .testimonials__viewport {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .testimonials__track {
+    display: flex;
+    gap: clamp(1rem, 2vw, 1.75rem);
+    padding-inline: max(var(--gutter), calc((100vw - var(--container)) / 2));
+    padding-block: 0.5rem 1.5rem;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+    cursor: grab;
+  }
+
+  .testimonials__track::-webkit-scrollbar {
+    display: none;
+  }
+
+  .testimonials__track:active {
+    cursor: grabbing;
+  }
+
+  .testimonial {
+    flex: none;
+    inline-size: min(640px, 86vw);
+    scroll-snap-align: center;
+  }
+
+  .testimonial figure {
+    position: relative;
+    margin: 0;
+    height: 100%;
+    display: grid;
+    align-content: start;
+    gap: 1.1rem;
+    padding: clamp(1.75rem, 3.5vw, 2.75rem);
+    background: var(--c-white);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow);
+    overflow: hidden;
+  }
+
+  .testimonial__quote {
+    position: absolute;
+    inset-block-start: -0.35em;
+    inset-inline-start: 0.35em;
+    font-family: var(--font-display);
+    font-size: 8rem;
+    line-height: 1;
+    color: var(--c-cyan);
+    opacity: 0.18;
+    pointer-events: none;
+  }
+
+  .testimonial__text {
+    position: relative;
+    margin: 0;
+    font-size: var(--fs-lead);
+    line-height: 1.6;
+    color: var(--c-ink);
+  }
+
+  .testimonial__author {
+    position: relative;
+    display: grid;
+    gap: 0.15rem;
+    padding-block-start: 1rem;
+    border-block-start: 2px solid var(--c-bg-alt);
+  }
+
+  .testimonial__name {
+    font-family: var(--font-display);
+    font-size: 1.1rem;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+  }
+
+  .testimonial__role {
+    font-size: var(--fs-sm);
+    color: var(--c-text-3);
+  }
+
+  .testimonial__index {
+    position: absolute;
+    inset-block-end: 1.25rem;
+    inset-inline-end: 1.5rem;
+    font-family: var(--font-display);
+    font-size: 2.6rem;
+    color: var(--c-ink);
+    opacity: 0.08;
+    line-height: 1;
+  }
+
+  @media (max-width: 767px) {
+    .testimonials__head {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+  }
+</style>
+
+<script>
+  const carousel = document.querySelector<HTMLElement>('[data-carousel]');
+  const track = carousel?.querySelector<HTMLElement>('.testimonials__track');
+
+  if (carousel && track) {
+    const step = () => {
+      const first = track.querySelector<HTMLElement>('.testimonial');
+      if (!first) return track.clientWidth;
+      const gap = parseFloat(getComputedStyle(track).gap) || 0;
+      return first.offsetWidth + gap;
+    };
+
+    const scrollByCard = (direction: number) => {
+      carousel.scrollBy({ left: direction * step(), behavior: 'smooth' });
+    };
+
+    carousel
+      .querySelector('[data-carousel-prev]')
+      ?.addEventListener('click', () => scrollByCard(-1));
+    carousel
+      .querySelector('[data-carousel-next]')
+      ?.addEventListener('click', () => scrollByCard(1));
+
+    /* Glisser-déposer à la souris (au-delà du scroll-snap natif). */
+    let isDown = false;
+    let startX = 0;
+    let startScroll = 0;
+
+    track.addEventListener('pointerdown', (event) => {
+      if (event.pointerType === 'touch') return;
+      isDown = true;
+      startX = event.clientX;
+      startScroll = track.scrollLeft;
+      track.setPointerCapture(event.pointerId);
+    });
+
+    track.addEventListener('pointermove', (event) => {
+      if (!isDown) return;
+      track.scrollLeft = startScroll - (event.clientX - startX);
+    });
+
+    const stop = () => {
+      isDown = false;
+    };
+
+    track.addEventListener('pointerup', stop);
+    track.addEventListener('pointercancel', stop);
+    track.addEventListener('pointerleave', stop);
+  }
+</script>

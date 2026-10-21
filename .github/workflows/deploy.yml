@@ -1,0 +1,88 @@
+name: Déploiement GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+# Permissions minimales : lecture du dépôt, écriture Pages, jeton OIDC.
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    name: Build Astro
+    runs-on: ubuntu-latest
+    steps:
+      - name: Récupérer le dépôt
+        uses: actions/checkout@v4
+
+      - name: Installer Node
+        uses: actions/setup-node@v4
+        with:
+          # Node 22 : `sitemap` (dépendance d'@astrojs/sitemap) exige >= 20.19.5
+          # et `undici` >= 22.19.0.
+          node-version: '22'
+          cache: npm
+
+      - name: Installer les dépendances
+        run: npm ci
+
+      - name: Configurer GitHub Pages
+        id: pages
+        uses: actions/configure-pages@v5
+        with:
+          # Active Pages (source : GitHub Actions) si ce n'est pas déjà fait.
+          enablement: true
+
+      - name: Résoudre l'URL publique
+        id: domain
+        env:
+          CUSTOM_DOMAIN: ${{ vars.CUSTOM_DOMAIN }}
+          ORIGIN: ${{ steps.pages.outputs.origin }}
+          BASE_PATH: ${{ steps.pages.outputs.base_path }}
+        run: |
+          if [ -n "$CUSTOM_DOMAIN" ]; then
+            # Domaine personnalisé : site à la racine du domaine.
+            echo "site=https://$CUSTOM_DOMAIN" >> "$GITHUB_OUTPUT"
+            echo "base=/" >> "$GITHUB_OUTPUT"
+          else
+            # Site projet : https://<user>.github.io/<repo>
+            echo "site=$ORIGIN$BASE_PATH" >> "$GITHUB_OUTPUT"
+            echo "base=$BASE_PATH" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Build
+        env:
+          PUBLIC_SITE_URL: ${{ steps.domain.outputs.site }}
+          BASE_PATH: ${{ steps.domain.outputs.base }}
+        run: npm run build
+
+      - name: Ajouter le CNAME (domaine personnalisé)
+        if: ${{ vars.CUSTOM_DOMAIN != '' }}
+        env:
+          CUSTOM_DOMAIN: ${{ vars.CUSTOM_DOMAIN }}
+        run: echo "$CUSTOM_DOMAIN" > dist/CNAME
+
+      - name: Publier l'artefact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist
+
+  deploy:
+    name: Déployer sur GitHub Pages
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Déployer
+        id: deployment
+        uses: actions/deploy-pages@v4

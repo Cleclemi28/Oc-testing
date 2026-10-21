@@ -1,0 +1,291 @@
+---
+import { banners, featuredBanners } from '../data/banners';
+import { ctas } from '../data/site';
+---
+
+<section class="gallery" id="galerie" data-gallery>
+  <div class="gallery__head container container--wide">
+    <div class="gallery__head-text">
+      <p class="eyebrow" data-reveal="fade-up">Nos ateliers</p>
+      <h2 data-reveal="fade-up" data-split="lines">Plus de 100 bannières prêtes à animer</h2>
+      <p class="lead" data-reveal="fade-up">
+        Un catalogue d'ateliers ludiques et festifs, testés sur le terrain et adaptables à tous les
+        publics. Faites défiler pour découvrir notre sélection.
+      </p>
+    </div>
+    <a class="btn btn--light gallery__cta" href={ctas.banners.href}>
+      Voir les {banners.length} bannières
+    </a>
+  </div>
+
+  <div class="gallery__pin" data-gallery-pin>
+    <div class="gallery__viewport">
+      <ul class="gallery__track" data-gallery-track>
+        {
+          featuredBanners.map((banner) => (
+            <li class="gallery__item" data-gallery-item>
+              <figure class="gallery__card">
+                <img
+                  data-src={banner.src}
+                  data-srcset={banner.srcSet}
+                  src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'/%3E"
+                  style={`--banner: url("${banner.src}")`}
+                  alt={`Bannière : ${banner.label}`}
+                  width={banner.width}
+                  height={banner.height}
+                  sizes="(max-width: 767px) 150px, (max-width: 1200px) 17vw, 215px"
+                  loading="lazy"
+                  decoding="async"
+                  data-gallery-img
+                />
+                <figcaption class="gallery__caption">{banner.label}</figcaption>
+              </figure>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+
+    <div class="gallery__progress" aria-hidden="true">
+      <span class="gallery__progress-bar" data-gallery-progress></span>
+    </div>
+
+    <p class="gallery__hint" aria-hidden="true">
+      <span class="gallery__hint-dot"></span>
+      Faites défiler pour parcourir les bannières
+    </p>
+  </div>
+</section>
+
+<style>
+  .gallery {
+    position: relative;
+    background: linear-gradient(160deg, var(--c-teal) 0%, var(--c-accent) 55%, var(--c-cyan) 100%);
+    color: var(--c-white);
+    padding-block: clamp(3rem, 6vw, 5rem) clamp(2rem, 4vw, 3rem);
+  }
+
+  .gallery::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: radial-gradient(rgb(255 255 255 / 0.16) 1px, transparent 1px);
+    background-size: 26px 26px;
+    opacity: 0.4;
+    pointer-events: none;
+  }
+
+  .gallery__head {
+    position: relative;
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 2rem;
+    margin-block-end: clamp(1.5rem, 3vw, 2.25rem);
+  }
+
+  .gallery__head-text {
+    max-width: 660px;
+  }
+
+  .gallery .eyebrow {
+    color: var(--c-orange);
+  }
+
+  .gallery .eyebrow::before {
+    background: linear-gradient(90deg, var(--c-orange), #ffb347);
+  }
+
+  .gallery h2 {
+    color: var(--c-white);
+  }
+
+  .gallery .lead {
+    color: rgb(255 255 255 / 0.85);
+  }
+
+  .gallery__cta {
+    flex: none;
+  }
+
+  /* Zone épinglée : occupe une hauteur d'écran, le rail est centré dedans. */
+  .gallery__pin {
+    position: relative;
+    display: grid;
+    align-content: center;
+    gap: clamp(1rem, 2vw, 1.75rem);
+    min-block-size: min(100svh, 760px);
+    padding-block: clamp(0.75rem, 1.5vw, 1.5rem);
+  }
+
+  .gallery__viewport {
+    position: relative;
+    overflow: hidden;
+    perspective: 1200px;
+  }
+
+  .gallery__track {
+    display: flex;
+    align-items: center;
+    gap: clamp(0.6rem, 1.4vw, 1.1rem);
+    inline-size: max-content;
+    padding-inline: var(--gutter);
+    will-change: transform;
+  }
+
+  .gallery__item {
+    flex: none;
+  }
+
+  .gallery__card {
+    position: relative;
+    margin: 0;
+    inline-size: clamp(150px, 17vw, 215px);
+    border-radius: var(--radius);
+    overflow: hidden;
+    background: rgb(255 255 255 / 0.08);
+    box-shadow: 0 26px 60px -30px rgb(0 30 50 / 0.8);
+    transition:
+      translate 0.4s var(--ease-out),
+      box-shadow 0.4s var(--ease-out);
+  }
+
+  .gallery__item:nth-child(3n + 2) .gallery__card {
+    translate: 0 22px;
+  }
+
+  .gallery__item:nth-child(3n) .gallery__card {
+    translate: 0 8px;
+  }
+
+  .gallery__card:hover {
+    translate: 0 -10px;
+    box-shadow: 0 40px 80px -34px rgb(0 30 50 / 0.9);
+  }
+
+  .gallery__card img {
+    inline-size: 100%;
+    block-size: clamp(210px, 44svh, 440px);
+    object-fit: cover;
+    object-position: top center;
+    background: rgb(255 255 255 / 0.06);
+    opacity: 0;
+    transition: opacity 0.55s var(--ease-out);
+  }
+
+  /* Apparition douce dès que la bannière est réellement chargée. */
+  .gallery__card img[data-loaded='1'] {
+    opacity: 1;
+  }
+
+  .gallery__caption {
+    position: absolute;
+    inset: auto 0 0 0;
+    padding: 2.5rem 1rem 0.9rem;
+    background: linear-gradient(to top, rgb(0 30 50 / 0.92), transparent);
+    font-size: var(--fs-xs);
+    font-weight: 500;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    opacity: 0;
+    translate: 0 10px;
+    transition:
+      opacity 0.35s var(--ease-out),
+      translate 0.35s var(--ease-out);
+  }
+
+  .gallery__card:hover .gallery__caption {
+    opacity: 1;
+    translate: 0 0;
+  }
+
+  .gallery__progress {
+    position: relative;
+    inline-size: min(240px, 40vw);
+    block-size: 4px;
+    border-radius: 2px;
+    background: rgb(255 255 255 / 0.25);
+    margin-inline: auto;
+    overflow: hidden;
+  }
+
+  .gallery__progress-bar {
+    display: block;
+    block-size: 100%;
+    inline-size: 100%;
+    border-radius: 2px;
+    background: linear-gradient(90deg, var(--c-orange), #ffb347);
+    transform-origin: left;
+    scale: 0 1;
+  }
+
+  .gallery__hint {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.6rem;
+    margin: 0;
+    font-size: var(--fs-xs);
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: rgb(255 255 255 / 0.7);
+  }
+
+  .gallery__hint-dot {
+    inline-size: 7px;
+    block-size: 7px;
+    border-radius: 50%;
+    background: var(--c-orange);
+    animation: gallery-pulse 1.8s var(--ease-in-out) infinite;
+  }
+
+  @keyframes gallery-pulse {
+    0%,
+    100% {
+      opacity: 0.35;
+      scale: 0.8;
+    }
+    50% {
+      opacity: 1;
+      scale: 1.25;
+    }
+  }
+
+  @media (max-width: 899px) {
+    .gallery__head {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+
+    .gallery__card img {
+      block-size: clamp(190px, 38svh, 380px);
+    }
+  }
+
+  /* Sans JS : galerie défilable classique, images servies par le CSS. */
+  :global(html:not(.js)) .gallery__pin {
+    min-block-size: 0;
+  }
+
+  :global(html:not(.js)) .gallery__viewport {
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+  }
+
+  :global(html:not(.js)) .gallery__item {
+    scroll-snap-align: center;
+  }
+
+  :global(html:not(.js)) .gallery__card img {
+    display: none;
+  }
+
+  :global(html:not(.js)) .gallery__card::before {
+    content: '';
+    display: block;
+    aspect-ratio: 2 / 5;
+    background-image: var(--banner);
+    background-size: cover;
+    background-position: top center;
+  }
+</style>

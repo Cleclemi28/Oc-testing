@@ -1,0 +1,321 @@
+---
+import { nav, ctas } from '../data/site';
+import { logoImage } from '../data/images';
+
+const path = import.meta.env.BASE_URL;
+---
+
+<header class="site-header" data-header>
+  <div class="site-header__progress" aria-hidden="true">
+    <span data-progress-bar></span>
+  </div>
+
+  <div class="site-header__inner container container--wide">
+    <a class="site-header__brand" href={nav[0].href} aria-label="La Fête de la Vie — accueil">
+      <img
+        src={logoImage.src}
+        alt="La Fête de la Vie"
+        width={logoImage.width}
+        height={logoImage.height}
+        decoding="async"
+      />
+    </a>
+
+    <nav class="site-header__nav" aria-label="Navigation principale">
+      <ul>
+        {
+          nav.map((item) => (
+            <li>
+              <a href={item.href} class={item.label === 'Accueil' ? 'is-active' : undefined}>
+                {item.label}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </nav>
+
+    <div class="site-header__actions">
+      <a class="btn btn--sm site-header__cta" href={ctas.organize.href}>
+        {ctas.organize.label}
+      </a>
+      <button
+        class="site-header__burger"
+        type="button"
+        aria-expanded="false"
+        aria-controls="mobile-nav"
+        data-menu-toggle
+      >
+        <span class="sr-only">Ouvrir le menu</span>
+        <span class="site-header__burger-bar" aria-hidden="true"></span>
+      </button>
+    </div>
+  </div>
+
+  <div class="site-header__mobile" id="mobile-nav" data-mobile-nav hidden>
+    <nav aria-label="Navigation mobile">
+      <ul>
+        {
+          nav.map((item) => (
+            <li>
+              <a href={item.href}>{item.label}</a>
+            </li>
+          ))
+        }
+      </ul>
+    </nav>
+    <div class="site-header__mobile-cta">
+      <a class="btn" href={ctas.organize.href}>{ctas.organize.label}</a>
+      <a class="btn btn--ghost" href={ctas.donate.href}>{ctas.donate.label}</a>
+    </div>
+  </div>
+</header>
+
+<style>
+  .site-header {
+    position: fixed;
+    inset: 0 0 auto 0;
+    z-index: 100;
+    transition:
+      background-color 0.35s var(--ease-out),
+      box-shadow 0.35s var(--ease-out),
+      translate 0.35s var(--ease-out);
+  }
+
+  .site-header::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: rgb(240 247 255 / 0.82);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    opacity: 0;
+    transition: opacity 0.35s var(--ease-out);
+  }
+
+  .site-header.is-stuck {
+    box-shadow: 0 10px 34px -22px rgb(55 96 121 / 0.55);
+  }
+
+  .site-header.is-stuck::before {
+    opacity: 1;
+  }
+
+  /* Barre de progression de lecture, en haut de l'en-tête. */
+  .site-header__progress {
+    position: absolute;
+    inset-block-start: 0;
+    inset-inline: 0;
+    block-size: 3px;
+    z-index: 2;
+    pointer-events: none;
+  }
+
+  .site-header__progress span {
+    display: block;
+    block-size: 100%;
+    inline-size: 100%;
+    background: linear-gradient(90deg, var(--c-orange), var(--c-cyan));
+    transform-origin: left;
+    scale: 0 1;
+  }
+
+  .site-header__inner {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1.5rem;
+    min-height: var(--header-h);
+    padding-block: 0.75rem;
+  }
+
+  .site-header__brand img {
+    inline-size: auto;
+    block-size: 40px;
+    transition: opacity 0.3s var(--ease-out);
+  }
+
+  .site-header__brand:hover img {
+    opacity: 0.75;
+  }
+
+  .site-header__nav ul {
+    display: flex;
+    align-items: center;
+    gap: clamp(1rem, 2vw, 2rem);
+  }
+
+  .site-header__nav a {
+    position: relative;
+    font-size: var(--fs-sm);
+    font-weight: 500;
+    letter-spacing: 0.35px;
+    color: var(--c-ink);
+    padding-block: 0.35rem;
+    white-space: nowrap;
+    transition: color 0.25s var(--ease-out);
+  }
+
+  .site-header__nav a::after {
+    content: '';
+    position: absolute;
+    inset: auto 0 0 0;
+    block-size: 2px;
+    border-radius: 2px;
+    background: var(--c-accent);
+    scale: 0 1;
+    transform-origin: left;
+    transition: scale 0.3s var(--ease-out);
+  }
+
+  .site-header__nav a:hover::after,
+  .site-header__nav a.is-active::after {
+    scale: 1 1;
+  }
+
+  .site-header__nav a:hover,
+  .site-header__nav a.is-active {
+    color: var(--c-accent);
+  }
+
+  .site-header__actions {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  .site-header__burger {
+    display: none;
+    inline-size: 46px;
+    block-size: 46px;
+    border: 0;
+    border-radius: var(--radius-sm);
+    background: transparent;
+    cursor: pointer;
+    padding: 0;
+    place-items: center;
+  }
+
+  .site-header__burger-bar,
+  .site-header__burger-bar::before,
+  .site-header__burger-bar::after {
+    display: block;
+    inline-size: 24px;
+    block-size: 2px;
+    border-radius: 2px;
+    background: var(--c-ink);
+    transition:
+      translate 0.3s var(--ease-out),
+      rotate 0.3s var(--ease-out),
+      opacity 0.2s var(--ease-out);
+  }
+
+  .site-header__burger-bar {
+    position: relative;
+  }
+
+  .site-header__burger-bar::before,
+  .site-header__burger-bar::after {
+    content: '';
+    position: absolute;
+    left: 0;
+  }
+
+  .site-header__burger-bar::before {
+    top: -7px;
+  }
+
+  .site-header__burger-bar::after {
+    top: 7px;
+  }
+
+  .site-header__burger[aria-expanded='true'] .site-header__burger-bar {
+    background: transparent;
+  }
+
+  .site-header__burger[aria-expanded='true'] .site-header__burger-bar::before {
+    rotate: 45deg;
+    top: 0;
+  }
+
+  .site-header__burger[aria-expanded='true'] .site-header__burger-bar::after {
+    rotate: -45deg;
+    top: 0;
+  }
+
+  .site-header__mobile {
+    position: relative;
+    background: var(--c-bg);
+    border-block-start: 1px solid var(--c-line);
+    padding: 1.25rem var(--gutter) 2rem;
+  }
+
+  .site-header__mobile ul {
+    display: grid;
+    gap: 0.25rem;
+  }
+
+  .site-header__mobile a:not(.btn) {
+    display: block;
+    padding: 0.75rem 0;
+    font-family: var(--font-display);
+    font-size: 1.25rem;
+    border-block-end: 1px solid var(--c-line);
+  }
+
+  .site-header__mobile-cta {
+    display: grid;
+    gap: 0.75rem;
+    margin-top: 1.5rem;
+  }
+
+  .site-header__mobile-cta .btn {
+    width: 100%;
+  }
+
+  @media (max-width: 1023px) {
+    .site-header__nav,
+    .site-header__cta {
+      display: none;
+    }
+
+    .site-header__burger {
+      display: grid;
+    }
+  }
+</style>
+
+<script>
+  const header = document.querySelector<HTMLElement>('[data-header]');
+  const toggle = document.querySelector<HTMLButtonElement>('[data-menu-toggle]');
+  const mobileNav = document.querySelector<HTMLElement>('[data-mobile-nav]');
+
+  if (header) {
+    const onScroll = () => {
+      header.classList.toggle('is-stuck', window.scrollY > 24);
+    };
+    onScroll();
+    window.addEventListener('scroll', onScroll, { passive: true });
+  }
+
+  if (toggle && mobileNav) {
+    const setOpen = (open: boolean) => {
+      toggle.setAttribute('aria-expanded', String(open));
+      mobileNav.hidden = !open;
+      document.documentElement.classList.toggle('is-locked', open);
+    };
+
+    toggle.addEventListener('click', () => {
+      setOpen(toggle.getAttribute('aria-expanded') !== 'true');
+    });
+
+    mobileNav.addEventListener('click', (event) => {
+      if ((event.target as HTMLElement).closest('a')) setOpen(false);
+    });
+
+    window.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape') setOpen(false);
+    });
+  }
+</script>

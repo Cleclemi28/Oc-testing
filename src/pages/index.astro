@@ -1,0 +1,36 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Hero from '../components/Hero.astro';
+import LogoMarquee from '../components/LogoMarquee.astro';
+import Manifesto from '../components/Manifesto.astro';
+import Pillars from '../components/Pillars.astro';
+import Band from '../components/Band.astro';
+import BannerGallery from '../components/BannerGallery.astro';
+import Steps from '../components/Steps.astro';
+import Team from '../components/Team.astro';
+import Stats from '../components/Stats.astro';
+import Testimonials from '../components/Testimonials.astro';
+import Contact from '../components/Contact.astro';
+import { site } from '../data/site';
+
+const title = 'La Fête de la Vie — Forums santé-addictions festifs et participatifs';
+const description = site.description;
+---
+
+<BaseLayout title={title} description={description}>
+  <Hero />
+  <LogoMarquee />
+  <Manifesto />
+  <Pillars />
+  <Band />
+  <BannerGallery />
+  <Steps />
+  <Team />
+  <Stats />
+  <Testimonials />
+  <Contact />
+</BaseLayout>
+
+<script>
+  import '../scripts/animations';
+</script>

@@ -1,0 +1,104 @@
+---
+import { stats } from '../data/content';
+---
+
+<section class="stats section section--tight" id="chiffres">
+  <div class="container">
+    <div class="stats__grid">
+      {
+        stats.map((stat, index) => (
+          <div class="stat" data-stat data-reveal="fade-up" style={`--i:${index}`}>
+            <p class="stat__value">
+              <span data-count={stat.value} data-format={stat.value === 60000 ? 'space' : 'plain'}>
+                0
+              </span>
+              {stat.suffix && <span class="stat__suffix">{stat.suffix}</span>}
+            </p>
+            <p class="stat__label">{stat.label}</p>
+            <p class="stat__body">{stat.body}</p>
+          </div>
+        ))
+      }
+    </div>
+  </div>
+</section>
+
+<style>
+  .stats {
+    background: linear-gradient(135deg, var(--c-teal) 0%, var(--c-accent) 100%);
+    color: var(--c-white);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .stats::before {
+    content: '';
+    position: absolute;
+    inset-block-start: -30%;
+    inset-inline-start: -10%;
+    inline-size: 420px;
+    block-size: 420px;
+    border-radius: 50%;
+    background: var(--c-cyan);
+    opacity: 0.2;
+    filter: blur(70px);
+  }
+
+  .stats__grid {
+    position: relative;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: clamp(1.5rem, 4vw, 3rem);
+    text-align: center;
+  }
+
+  .stat {
+    padding: clamp(1.25rem, 2.5vw, 2rem);
+    border-radius: var(--radius-lg);
+    background: rgb(255 255 255 / 0.08);
+    border: 1px solid rgb(255 255 255 / 0.16);
+    backdrop-filter: blur(6px);
+    transition:
+      translate 0.4s var(--ease-out),
+      background-color 0.4s var(--ease-out);
+  }
+
+  .stat:hover {
+    translate: 0 -6px;
+    background: rgb(255 255 255 / 0.14);
+  }
+
+  .stat__value {
+    display: flex;
+    align-items: baseline;
+    justify-content: center;
+    gap: 0.05em;
+    margin: 0 0 0.35rem;
+    font-family: var(--font-display);
+    font-size: clamp(2.75rem, 2rem + 4vw, 4.25rem);
+    line-height: 1;
+    letter-spacing: var(--ls-display);
+    color: var(--c-white);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .stat__suffix {
+    color: var(--c-orange);
+  }
+
+  .stat__label {
+    margin: 0 0 0.6rem;
+    font-size: var(--fs-xs);
+    font-weight: 600;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--c-orange);
+  }
+
+  .stat__body {
+    margin: 0;
+    font-size: var(--fs-sm);
+    line-height: 1.65;
+    color: rgb(255 255 255 / 0.82);
+  }
+</style>
